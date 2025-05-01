@@ -50,8 +50,6 @@ services:
       interval: 30s
       timeout: 20s
       retries: 3
-    networks:
-      - pp-net
 
   s3_setup:
     image: minio/mc:RELEASE.2024-08-13T05-33-17Z
@@ -69,6 +67,4 @@ services:
         mc alias set myminio http://minio-s3:${MINIO_API_PORT} ${MINIO_ROOT_USER} ${MINIO_ROOT_PASSWORD}
         mc admin user svcacct add --access-key ${MINIO_AWS_ACCESS_KEY_ID} --secret-key ${MINIO_AWS_SECRET_ACCESS_KEY} myminio ${MINIO_ROOT_USER}
         mc mb myminio/${MINIO_BUCKET_NAME}
-    networks:
-      - pp-net
 

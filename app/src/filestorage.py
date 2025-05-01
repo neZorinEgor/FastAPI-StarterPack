@@ -1,14 +1,15 @@
 from contextlib import asynccontextmanager
 from typing import Optional
 
-from app.src.config import settings
-
 from aiobotocore.session import get_session
+from botocore.exceptions import ClientError
+
+from src.config import settings
 
 
 class S3Client:
     def __init__(
-            self: "S3Client",
+            self,
             access_key: str,
             secret_key: str,
             endpoint_url: str,
@@ -35,9 +36,12 @@ class S3Client:
 
     async def get_file(self, bucket: str, key: str) -> Optional[bytes]:
         async with self.__get_client() as client:
-            response = await client.get_object(Bucket=bucket, Key=key)
-            async with response['Body'] as stream:
-                return await stream.read()
+            try:
+                response = await client.get_object(Bucket=bucket, Key=key)
+                async with response['Body'] as stream:
+                    return await stream.read()
+            except ClientError:
+                return None
 
     async def delete_file(self, bucket: str, key: str) -> dict:
         async with self.__get_client() as client:
@@ -45,7 +49,7 @@ class S3Client:
 
 
 s3_client = S3Client(
-    access_key=settings.AWS_ACCESS_KEY_ID,
-    secret_key=settings.AWS_SECRET_ACCESS_KEY,
-    endpoint_url=settings.s3_endpoint_url,
+    access_key=settings.MINIO_AWS_ACCESS_KEY_ID,
+    secret_key=settings.MINIO_AWS_SECRET_ACCESS_KEY,
+    endpoint_url=settings.s3_url,
 )
