@@ -30,31 +30,45 @@ services:
       redis:
         condition: service_healthy
 
-  s3:
-    container_name: s3
-    image: localstack/localstack:latest
+  minio-s3:
+    restart: always
+    image: minio/minio:RELEASE.2024-07-31T05-46-26Z
+    container_name: minio-s3
     ports:
-      - ${GATEWAY_LISTEN}:${GATEWAY_LISTEN}
-    volumes:
-      - localstack-data:/var/lib/localstack
+      - ${MINIO_API_PORT}:${MINIO_API_PORT}
+      - ${MINIO_WEB_UI_PORT}:${MINIO_WEB_UI_PORT}
+    environment:
+      MINIO_ROOT_USER: ${MINIO_ROOT_USER}
+      MINIO_ROOT_PASSWORD: ${MINIO_ROOT_PASSWORD}
+    command: server /data --console-address ':${MINIO_WEB_UI_PORT}' --address ':${MINIO_API_PORT}'
+    # volumes:
+    #   - ./minio_data:/data
     env_file:
       - .env
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:${MINIO_API_PORT}/minio/health/live"]
+      interval: 30s
+      timeout: 20s
+      retries: 3
+    networks:
+      - pp-net
 
-#  backend:
-#    container_name: backend
-#    env_file:
-#      - .env
-#    ports:
-#      - ${APP_PORT}:${APP_PORT}
-#    command: bash -c "alembic upgrade head && uvicorn src.main:app --host ${APP_HOST} --port ${APP_PORT}"
-#    build:
-#      context: .
-#      dockerfile: Dockerfile
-#    depends_on:
-#      postgres:
-#        condition: service_healthy
-
-volumes:
-  localstack-data:
-
+  s3_setup:
+    image: minio/mc:RELEASE.2024-08-13T05-33-17Z
+    container_name: s3_setup
+    depends_on:
+      - minio-s3
+    environment:
+      MINIO_ROOT_USER: ${MINIO_ROOT_USER}
+      MINIO_ROOT_PASSWORD: ${MINIO_ROOT_PASSWORD}
+    entrypoint: ["/bin/sh", "-c"]
+    env_file:
+      - .env
+    command:
+      - |
+        mc alias set myminio http://minio-s3:${MINIO_API_PORT} ${MINIO_ROOT_USER} ${MINIO_ROOT_PASSWORD}
+        mc admin user svcacct add --access-key ${MINIO_AWS_ACCESS_KEY_ID} --secret-key ${MINIO_AWS_SECRET_ACCESS_KEY} myminio ${MINIO_ROOT_USER}
+        mc mb myminio/${MINIO_BUCKET_NAME}
+    networks:
+      - pp-net
 

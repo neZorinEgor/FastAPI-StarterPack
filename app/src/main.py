@@ -3,10 +3,8 @@ from fastapi.middleware.cors import CORSMiddleware
 from fastapi_cache import FastAPICache
 from fastapi_cache.backends.redis import RedisBackend
 
-from celery import Celery
 
-from src.filestorage import s3_client
-from src.settings import settings
+from app.src.config import settings
 
 import logging
 from redis import asyncio as aioredis
@@ -16,11 +14,11 @@ logging.basicConfig(level=logging.INFO)
 
 
 @asynccontextmanager
-async def lifespan(fastapi: FastAPI):
-    await s3_client.create_bucket(bucket_name=settings.S3_BUCKETS)
+async def lifespan(_: FastAPI):
     redis = aioredis.from_url(settings.redis_url)
     FastAPICache.init(RedisBackend(redis), prefix="fastapi-cache")
     yield
+    pass
 
 
 app = FastAPI(
@@ -30,8 +28,6 @@ app = FastAPI(
     docs_url="/docs",
     version="1.0.0"
 )
-celery = Celery("celery", broker=settings.redis_url)
-
 
 # Origins url's for CORS
 origins = ["*"]

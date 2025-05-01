@@ -1,7 +1,7 @@
 from contextlib import asynccontextmanager
 from typing import Optional
 
-from src.settings import settings
+from app.src.config import settings
 
 from aiobotocore.session import get_session
 

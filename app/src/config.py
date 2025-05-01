@@ -1,17 +1,7 @@
 from pathlib import Path
-from datetime import timedelta
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
 BASE_DIR = Path(__file__).parent
-
-
-class _Auth:
-    PRIVATE_JWT_KEY_PATH: Path = BASE_DIR / "auth" / "certs" / "jwt-private.pem"
-    PUBLIC_JWT_KEY_PATH: Path = BASE_DIR / "auth" / "certs" / "jwt-public.pem"
-    ALGORITHM: str = "RS256"
-    ACCESS_TOKEN_EXPIRE_MINUTES: timedelta = timedelta(minutes=240)
-    REFRESH_TOKEN_EXPIRE_DAYS: timedelta = timedelta(days=1)
-    BAN_MESSAGE: str = "BANNED"
 
 
 class Settings(BaseSettings):
@@ -24,12 +14,14 @@ class Settings(BaseSettings):
     POSTGRES_PASSWORD: str
     POSTGRES_DB: str
     # Filestorage
-    S3_HOST: str
-    S3_BUCKETS: str
-    GATEWAY_LISTEN: str
-    SERVICES: str
-    AWS_ACCESS_KEY_ID: str
-    AWS_SECRET_ACCESS_KEY: str
+    MINIO_API_PORT: int
+    MINIO_API_HOST: str
+    MINIO_WEB_UI_PORT: int
+    MINIO_ROOT_USER: str
+    MINIO_ROOT_PASSWORD: str
+    MINIO_AWS_ACCESS_KEY_ID: str
+    MINIO_AWS_SECRET_ACCESS_KEY: str
+    MINIO_BUCKET_NAME: str
     # Cache | broker
     REDIS_HOST: str
     REDIS_PORT: str

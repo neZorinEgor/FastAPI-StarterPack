@@ -19,7 +19,7 @@ The presence of `postgresql`, `redis` and `s3` is simulated in `docker-compose`.
 alembic revision --autogenerate -m "<migration message>"
 alembic upgrade head
 ```
-2. Setting up models for migration in [env.py](alembic/env.py)
+2. Setting up models for migration in [env.py](app/alembic/env.py)
 ```bash
 # add your model's MetaData object here
 from src.database import Base

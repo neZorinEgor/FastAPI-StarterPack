@@ -9,7 +9,3 @@ SQLAlchemy==2.0.37
 aiobotocore==2.19.0
 redis==5.2.1
 fastapi-cache2==0.2.2
-celery==5.4.0
-pyjwt==2.8.0
-cryptography==42.0.8
-bcrypt==4.2.0
