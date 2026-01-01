@@ -30,7 +30,7 @@
     {
       "datasource": {
         "type": "prometheus",
-        "uid": "bf8hc0ubbj6rkb"
+        "uid": "my-prometheus"
       },
       "fieldConfig": {
         "defaults": {
@@ -76,7 +76,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "bf8hc0ubbj6rkb"
+            "uid": "my-prometheus"
           },
           "editorMode": "code",
           "exemplar": true,
@@ -112,7 +112,7 @@
     {
       "datasource": {
         "type": "prometheus",
-        "uid": "bf8hc0ubbj6rkb"
+        "uid": "my-prometheus"
       },
       "fieldConfig": {
         "defaults": {
@@ -158,7 +158,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "bf8hc0ubbj6rkb"
+            "uid": "my-prometheus"
           },
           "editorMode": "code",
           "exemplar": true,
@@ -202,7 +202,7 @@
     {
       "datasource": {
         "type": "prometheus",
-        "uid": "bf8hc0ubbj6rkb"
+        "uid": "my-prometheus"
       },
       "fieldConfig": {
         "defaults": {
@@ -262,7 +262,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "bf8hc0ubbj6rkb"
+            "uid": "my-prometheus"
           },
           "exemplar": true,
           "expr": "fastapi_requests_duration_seconds_sum{app_name=\"$app_name\"} / fastapi_requests_duration_seconds_count{app_name=\"$app_name\"}",
@@ -277,7 +277,7 @@
     {
       "datasource": {
         "type": "prometheus",
-        "uid": "bf8hc0ubbj6rkb"
+        "uid": "my-prometheus"
       },
       "fieldConfig": {
         "defaults": {
@@ -329,7 +329,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "bf8hc0ubbj6rkb"
+            "uid": "my-prometheus"
           },
           "editorMode": "code",
           "exemplar": false,
@@ -348,7 +348,7 @@
     {
       "datasource": {
         "type": "prometheus",
-        "uid": "bf8hc0ubbj6rkb"
+        "uid": "my-prometheus"
       },
       "fieldConfig": {
         "defaults": {
@@ -431,7 +431,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "bf8hc0ubbj6rkb"
+            "uid": "my-prometheus"
           },
           "exemplar": true,
           "expr": "sum by(path) (fastapi_responses_total{app_name=\"$app_name\", status_code=~\"2.*\", path!=\"/metrics\"}) / sum by(path) (fastapi_responses_total{app_name=\"$app_name\", path!=\"/metrics\"})",
@@ -446,7 +446,7 @@
     {
       "datasource": {
         "type": "prometheus",
-        "uid": "bf8hc0ubbj6rkb"
+        "uid": "my-prometheus"
       },
       "fieldConfig": {
         "defaults": {
@@ -529,7 +529,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "bf8hc0ubbj6rkb"
+            "uid": "my-prometheus"
           },
           "exemplar": true,
           "expr": "sum by(path) (fastapi_responses_total{app_name=\"$app_name\", status_code=~\"5.*\", path!=\"/metrics\"}) / sum by(path) (fastapi_responses_total{app_name=\"$app_name\", path!=\"/metrics\"})",
@@ -544,7 +544,7 @@
     {
       "datasource": {
         "type": "prometheus",
-        "uid": "bf8hc0ubbj6rkb"
+        "uid": "my-prometheus"
       },
       "fieldConfig": {
         "defaults": {
@@ -626,7 +626,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "bf8hc0ubbj6rkb"
+            "uid": "my-prometheus"
           },
           "exemplar": true,
           "expr": "histogram_quantile(.99,sum(rate(fastapi_requests_duration_seconds_bucket{app_name=\"$app_name\", path!=\"/metrics\"}[1m])) by(path, le))",
@@ -641,7 +641,7 @@
     {
       "datasource": {
         "type": "prometheus",
-        "uid": "bf8hc0ubbj6rkb"
+        "uid": "my-prometheus"
       },
       "fieldConfig": {
         "defaults": {
@@ -722,7 +722,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "bf8hc0ubbj6rkb"
+            "uid": "my-prometheus"
           },
           "exemplar": true,
           "expr": "fastapi_requests_in_progress{app_name=\"$app_name\", path!=\"/metrics\"}",
@@ -737,7 +737,7 @@
     {
       "datasource": {
         "type": "prometheus",
-        "uid": "bf8hc0ubbj6rkb"
+        "uid": "my-prometheus"
       },
       "fieldConfig": {
         "defaults": {
@@ -819,7 +819,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "bf8hc0ubbj6rkb"
+            "uid": "my-prometheus"
           },
           "exemplar": true,
           "expr": "rate(fastapi_requests_total{app_name=\"$app_name\"}[1m])",
@@ -839,44 +839,22 @@
   "templating": {
     "list": [
       {
-        "current": {
-          "text": "app",
-          "value": "app"
-        },
+        "name": "app_name",
+        "type": "query",
+        "label": "Application Name",
         "datasource": {
           "type": "prometheus",
-          "uid": "bf8hc0ubbj6rkb"
+          "uid": "my-prometheus"
         },
-        "definition": "label_values(fastapi_app_info{}, app_name)",
-        "includeAll": false,
-        "label": "Application Name",
-        "name": "app_name",
-        "options": [],
         "query": {
           "query": "label_values(fastapi_app_info{}, app_name)",
           "refId": "StandardVariableQuery"
         },
+        "definition": "label_values(fastapi_app_info{}, app_name)",
         "refresh": 1,
+        "includeAll": false,
         "regex": "",
-        "type": "query"
-      },
-      {
-        "current": {
-          "text": "",
-          "value": ""
-        },
-        "description": "query with keyword",
-        "label": "Log Query",
-        "name": "log_keyword",
-        "options": [
-          {
-            "selected": true,
-            "text": "",
-            "value": ""
-          }
-        ],
-        "query": "",
-        "type": "textbox"
+        "options": []
       }
     ]
   },

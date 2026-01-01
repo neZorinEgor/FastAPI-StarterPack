@@ -1,0 +1,33 @@
+from typing import Annotated
+
+from sqlalchemy import String
+from sqlalchemy.ext.asyncio import async_sessionmaker, create_async_engine
+from sqlalchemy.orm import DeclarativeBase, registry
+
+from src.config import settings
+
+engine = create_async_engine(
+    url=settings.postgresql_utl,
+    echo=False,
+)
+
+
+session_factory = async_sessionmaker(
+    bind=engine,
+    expire_on_commit=False,
+)
+
+
+str_50 = Annotated[str, 50]
+str_128 = Annotated[str, 128]
+str_255 = Annotated[str, 255]
+
+
+class Base(DeclarativeBase):
+    registry = registry(
+        type_annotation_map={
+            str_50: String(50),
+            str_128: String(128),
+            str_255: String(255)
+        }
+    )

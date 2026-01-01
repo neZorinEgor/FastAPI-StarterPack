@@ -40,7 +40,7 @@ REQUESTS_IN_PROGRESS = Gauge(
 )
 
 
-class PrometheusMiddleware(BaseHTTPMiddleware):
+class PrometheusMetricsMiddleware(BaseHTTPMiddleware):
     def __init__(self, app: ASGIApp, app_name: str = "app") -> None:
         super().__init__(app)
         self.app_name = app_name
