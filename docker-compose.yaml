@@ -1,55 +1,9 @@
 services:
-  app:
-    container_name: app
+  project:
+    container_name: project
     build:
       context: .
       dockerfile: Dockerfile
-    command: ["python", "-m", "src.main"]
     ports:
       - 8000:8000
-    healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:8000/healthcheck/alive"]
-      interval: 30s
-      timeout: 30s
-      retries: 5
-
-  postgres:
-    container_name: postgres
-    image: postgres:15-alpine
-    ports:
-      - 5432:5432
-    environment:
-      - POSTGRES_DB=example_db
-      - POSTGRES_USER=example_user
-      - POSTGRES_PASSWORD=example_password
-    healthcheck:
-      test: ["CMD-SHELL", "pg_isready", "-d", "example_db"]
-      interval: 30s
-      timeout: 60s
-      retries: 5
-      start_period: 80s
-
-  prometheus:
-    container_name: prometheus
-    image: prom/prometheus:v3.3.1
-    ports:
-      - "9090:9090"
-    volumes:
-      - ./configs/prometheus:/workspace
-    command:
-      - --config.file=/workspace/prometheus.yaml
-      - --enable-feature=exemplar-storage
-
-  grafana:
-    container_name: grafana
-    image: grafana/grafana:12.0.0
-    ports:
-      - "3000:3000"
-    volumes:
-      - ./configs/gragana/datasources:/etc/grafana/provisioning/datasources
-      - ./configs/gragana/dashboards/fastapi_dashboard.json:/etc/grafana/provisioning/dashboards/fastapi_dashboard.json
-      - ./configs/gragana/dashboard.yaml:/etc/grafana/provisioning/dashboards/dashboard.yaml
-    # volumes:
-    #   - ./etc/grafana/:/etc/grafana/provisioning/datasources
-    #   - ./etc/dashboards.yaml:/etc/grafana/provisioning/dashboards/dashboards.yaml
-    #   - ./etc/dashboards:/etc/grafana/dashboards
+    command: ["uvicorn", "src.project.main:app", "--host", "0.0.0.0", "--port", "8000"]
