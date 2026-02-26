@@ -11,7 +11,7 @@ from src.project.setup import settings
 
 
 def make_app() -> FastAPI:
-    app = FastAPI(lifespan=lifespan)
+    app = FastAPI(title="Project", version="v0.1.0", lifespan=lifespan)
     app.include_router(healthcheck_router)
     app.include_router(metrics_router)
     app.add_middleware(PrometheusMetricsMiddleware, app_name="project")

@@ -8,7 +8,7 @@ from prometheus_client.openmetrics.exposition import (
 router = APIRouter(prefix="/metrics", tags=["Prometheus"])
 
 
-@router.get("/metrics")
+@router.get("")
 def metrics() -> Response:
     return Response(
         content=generate_latest(REGISTRY), headers={"Content-Type": CONTENT_TYPE_LATEST}

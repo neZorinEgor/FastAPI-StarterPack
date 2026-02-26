@@ -1,0 +1,46 @@
+prometheus.remote_write "default" {
+  endpoint {
+    url = "http://prometheus:9090/api/v1/write"
+  }
+}
+
+prometheus.scrape "project" {
+        targets = [{
+                __address__ = "project:8000",
+        }]
+        forward_to      = [prometheus.remote_write.default.receiver]
+        job_name        = "project"
+        scrape_interval = "5s"
+        scrape_timeout  = "5s"
+}
+
+// discovery.docker "containers" {
+//   host = "unix:///var/run/docker.sock"
+// }
+
+// discovery.relabel "logs_docker" {
+//   targets = discovery.docker.containers.targets
+
+//   rule {
+//     target_label = "logs_hostname"
+//     replacement = constants.hostname
+//   }
+//   rule {
+//     source_labels = ["__meta_docker_container_name"]
+//     regex = "/(.*)"
+//     target_label = "logs_container"
+//   }
+// }
+
+// loki.source.docker "docker" {
+//   host       = "unix:///var/run/docker.sock"
+//   targets    = discovery.docker.containers.targets
+//   relabel_rules = discovery.relabel.logs_docker.rules
+//   forward_to = [loki.write.loki.receiver]
+// }
+
+// loki.write "loki" {
+//   endpoint {
+//     url = "http://loki:3100/loki/api/v1/push"
+//   }
+// }

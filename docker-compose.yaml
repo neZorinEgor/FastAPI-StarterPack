@@ -12,4 +12,32 @@ services:
       interval: 5s
       timeout: 30s
       retries: 5
-      
+
+  prometheus:
+    container_name: prometheus
+    image: prom/prometheus:v3.3.1
+    command: 
+      - "--config.file=/etc/prometheus/prometheus.yml"
+    ports:
+      - 9090:9090
+    depends_on:
+      project:
+        condition: service_healthy
+
+  alloy:
+    container_name: alloy
+    image: grafana/alloy:v1.13.2
+    ports:
+      - 12345:12345
+    volumes:
+      - ./infrastructure/alloy/config.alloy:/etc/alloy/config.alloy
+      - /var/run/docker.sock:/var/run/docker.sock
+    command:
+      - run
+      - --server.http.listen-addr=0.0.0.0:12345
+      - --storage.path=/var/lib/alloy/data
+      - /etc/alloy/config.alloy
+    depends_on:
+      project:
+        condition: service_healthy
+    
