@@ -1,0 +1,3 @@
+# FastAPI-starterpack
+
+TODO: desc

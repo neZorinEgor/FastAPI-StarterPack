@@ -6,6 +6,6 @@ datasources:
     orgId: 1 
     url: http://loki:3100
     basicAuth: false
-    isDefault: true 
+    isDefault: false 
     editable: false
     version: 1
