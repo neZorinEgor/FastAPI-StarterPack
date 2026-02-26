@@ -14,33 +14,33 @@ prometheus.scrape "project" {
         scrape_timeout  = "5s"
 }
 
-// discovery.docker "containers" {
-//   host = "unix:///var/run/docker.sock"
-// }
+discovery.docker "containers" {
+  host = "unix:///var/run/docker.sock"
+}
 
-// discovery.relabel "logs_docker" {
-//   targets = discovery.docker.containers.targets
+discovery.relabel "logs_docker" {
+  targets = discovery.docker.containers.targets
 
-//   rule {
-//     target_label = "logs_hostname"
-//     replacement = constants.hostname
-//   }
-//   rule {
-//     source_labels = ["__meta_docker_container_name"]
-//     regex = "/(.*)"
-//     target_label = "logs_container"
-//   }
-// }
+  rule {
+    target_label = "logs_hostname"
+    replacement = constants.hostname
+  }
+  rule {
+    source_labels = ["__meta_docker_container_name"]
+    regex = "/(.*)"
+    target_label = "logs_container"
+  }
+}
 
-// loki.source.docker "docker" {
-//   host       = "unix:///var/run/docker.sock"
-//   targets    = discovery.docker.containers.targets
-//   relabel_rules = discovery.relabel.logs_docker.rules
-//   forward_to = [loki.write.loki.receiver]
-// }
+loki.source.docker "docker" {
+  host       = "unix:///var/run/docker.sock"
+  targets    = discovery.docker.containers.targets
+  relabel_rules = discovery.relabel.logs_docker.rules
+  forward_to = [loki.write.loki.receiver]
+}
 
-// loki.write "loki" {
-//   endpoint {
-//     url = "http://loki:3100/loki/api/v1/push"
-//   }
-// }
+loki.write "loki" {
+  endpoint {
+    url = "http://loki:3100/loki/api/v1/push"
+  }
+}

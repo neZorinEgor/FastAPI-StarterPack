@@ -13,17 +13,6 @@ services:
       timeout: 30s
       retries: 5
 
-  prometheus:
-    container_name: prometheus
-    image: prom/prometheus:v3.3.1
-    command: 
-      - "--config.file=/etc/prometheus/prometheus.yml"
-    ports:
-      - 9090:9090
-    depends_on:
-      project:
-        condition: service_healthy
-
   alloy:
     container_name: alloy
     image: grafana/alloy:v1.13.2
@@ -37,6 +26,28 @@ services:
       - --server.http.listen-addr=0.0.0.0:12345
       - --storage.path=/var/lib/alloy/data
       - /etc/alloy/config.alloy
+    depends_on:
+      project:
+        condition: service_healthy
+
+  prometheus:
+    container_name: prometheus
+    image: prom/prometheus:v3.3.1
+    command: 
+      - "--config.file=/etc/prometheus/prometheus.yml"
+    ports:
+      - 9090:9090
+    depends_on:
+      project:
+        condition: service_healthy
+
+  loki:
+    container_name: loki
+    image: grafana/loki:3.6.3
+    command: 
+      - "-config.file=/etc/loki/local-config.yaml"
+    ports:
+      - 3100:3100
     depends_on:
       project:
         condition: service_healthy
