@@ -6,7 +6,8 @@ services:
       dockerfile: Dockerfile
     ports:
       - 8000:8000
-    command: ["uvicorn", "src.project.main:app", "--host", "0.0.0.0", "--port", "8000"]
+    command: ['python3', '-m', 'src.project.main']
+    # command: ["uvicorn", "src.project.main:app", "--host", "0.0.0.0", "--port", "8000"]
     healthcheck:
       test: ["CMD", "curl", "http://localhost:8000/healthcheck/alive"]
       interval: 5s

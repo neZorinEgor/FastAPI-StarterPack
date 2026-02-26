@@ -26,3 +26,11 @@ def make_app() -> FastAPI:
 
 
 app = make_app()
+import uvicorn
+
+log_config = uvicorn.config.LOGGING_CONFIG
+log_config["formatters"]["access"][
+    "fmt"
+] = "%(asctime)s %(levelname)s [%(name)s] [%(filename)s:%(lineno)d] - %(message)s"
+print(log_config)
+uvicorn.run(app, log_config=log_config)
