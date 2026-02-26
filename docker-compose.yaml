@@ -51,4 +51,19 @@ services:
     depends_on:
       project:
         condition: service_healthy
+
+  grafana:
+    container_name: grafana
+    image: grafana/grafana:12.0.0
+    ports:
+      - 3000:3000
+    volumes:
+      - ./infrastructure/grafana/datasource/loki.yaml:/etc/grafana/provisioning/datasources/loki.yaml
+      - ./infrastructure/grafana/datasource/prometheus.yaml:/etc/grafana/provisioning/datasources/prometheus.yaml
+    depends_on:
+      project:
+        condition: service_healthy
+    
+
+
     

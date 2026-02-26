@@ -10,8 +10,8 @@ prometheus.scrape "project" {
         }]
         forward_to      = [prometheus.remote_write.default.receiver]
         job_name        = "project"
-        scrape_interval = "5s"
-        scrape_timeout  = "5s"
+        scrape_interval = "15s"
+        scrape_timeout  = "10s"
 }
 
 discovery.docker "containers" {
