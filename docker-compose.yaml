@@ -62,6 +62,8 @@ services:
     ports:
       - 3000:3000
     volumes:
+      - ./infrastructure/grafana/dashboard/dada.json:/etc/grafana/provisioning/dashboards/json/dada.json
+      - ./infrastructure/grafana/dashboard-provider.yaml:/etc/grafana/provisioning/dashboards/dashboard-provider.yaml
       - ./infrastructure/grafana/datasource/loki.yaml:/etc/grafana/provisioning/datasources/loki.yaml
       - ./infrastructure/grafana/datasource/prometheus.yaml:/etc/grafana/provisioning/datasources/prometheus.yaml
     depends_on:

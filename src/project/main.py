@@ -19,8 +19,8 @@ def make_app() -> FastAPI:
         title="Project",
         version="v0.1.0",
         lifespan=lifespan,
-        docs_url=None,
-        redoc_url=None,
+        docs_url=None,  # include in swagger router
+        redoc_url=None,  # include in swagger router
     )
     app.mount("/static", StaticFiles(directory=STATIC_PATH), name="static")
     app.include_router(healthcheck_router)
@@ -43,4 +43,4 @@ log_config = uvicorn.config.LOGGING_CONFIG
 log_config["formatters"]["access"][
     "fmt"
 ] = "%(asctime)s %(levelname)s [%(name)s] [%(filename)s:%(lineno)d] - %(message)s"
-uvicorn.run(app, log_config=log_config)
+uvicorn.run(app, log_config=log_config, host="0.0.0.0", port=8000)
